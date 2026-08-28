@@ -246,6 +246,26 @@ export default function Home() {
   const pageDescription =
     'WafyShield is a free web security scanner that checks HTTPS/SSL, security headers, and cookie security in seconds. Get an instant security score, risk level, and clear fix recommendations.'
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "WafyShield",
+    "url": SITE_URL,
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "creator": {
+      "@type": "Person",
+      "name": "Afee Muhammod Wafy",
+      "url": "https://www.amwafy.xyz"
+    },
+    "description": pageDescription
+  }
+
   return (
     <>
       <Head>
@@ -253,7 +273,7 @@ export default function Home() {
         <meta name="description" content={pageDescription} />
         <meta
           name="keywords"
-          content="web security scanner, website security checker, security headers checker, HTTPS security checker, website security assessment, SSL checker, cookie security scanner"
+          content="web security scanner, website security checker, security headers checker, HTTPS security checker, website security assessment, SSL checker, cookie security scanner, Afee Muhammod Wafy"
         />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={SITE_URL + '/'} />
@@ -266,6 +286,10 @@ export default function Home() {
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </Head>
 
       <div className="page">
@@ -418,6 +442,50 @@ export default function Home() {
                 ))}
               </ul>
             )}
+          </section>
+
+          {/* ----------------- SEO Optimized About Section ----------------- */}
+          <section className="about-section" aria-labelledby="about-heading">
+            <div className="about-project">
+              <h2 id="about-heading">🛡️ About WafyShield</h2>
+              <p>
+                <strong>WafyShield</strong> is an open-access, lightweight web security assessment platform engineered to help developers, sysadmins, and website owners quickly evaluate their web security posture. By performing instant non-intrusive scans on public HTTP response headers, WafyShield verifies whether vital defense mechanisms—such as HTTPS enforcement, SSL/TLS certificate health, OWASP security headers, and cookie flags—are properly deployed.
+              </p>
+              <div className="about-grid">
+                <div className="about-card">
+                  <h4>Header Analysis</h4>
+                  <p>Audits HSTS, CSP, X-Frame-Options, X-Content-Type-Options, and Referrer-Policy against OWASP guidelines.</p>
+                </div>
+                <div className="about-card">
+                  <h4>SSL &amp; Cookie Audit</h4>
+                  <p>Checks HTTPS redirection and verifies Secure, HttpOnly, and SameSite attributes on cookies.</p>
+                </div>
+                <div className="about-card">
+                  <h4>Remediation Guide</h4>
+                  <p>Provides a transparent security score (0-100) alongside actionable, copy-paste developer fix suggestions.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="about-author">
+              <h3>👨‍💻 Developed by Afee Muhammod Wafy</h3>
+              <p>
+                WafyShield was built by <strong>Afee Muhammod Wafy</strong>, a web developer passionate about cybersecurity fundamentals, network security, and robust web architecture. Designed to make web security diagnostics fast and accessible, this project reflects a continuous effort to promote secure coding practices across the web.
+              </p>
+              <div className="author-links">
+                <a href="https://www.amwafy.xyz" target="_blank" rel="noopener noreferrer">
+                  🌐 Portfolio
+                </a>
+                <span>•</span>
+                <a href="https://github.com/amwafy" target="_blank" rel="noopener noreferrer">
+                  🐙 GitHub
+                </a>
+                <span>•</span>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                  💼 LinkedIn
+                </a>
+              </div>
+            </div>
           </section>
         </main>
 
@@ -674,6 +742,7 @@ export default function Home() {
           border-radius: var(--radius);
           box-shadow: var(--shadow);
           padding: 24px;
+          margin-bottom: 40px;
         }
         .history-head {
           display: flex;
@@ -753,6 +822,84 @@ export default function Home() {
           color: var(--gray-500);
           font-size: 12px;
         }
+
+        /* ---------------- About Section Styles ---------------- */
+        .about-section {
+          background: var(--white);
+          border-radius: var(--radius);
+          box-shadow: var(--shadow);
+          padding: 32px 28px;
+          margin-bottom: 40px;
+        }
+        .about-project h2 {
+          font-size: 20px;
+          color: var(--green-900);
+          margin: 0 0 12px;
+        }
+        .about-project > p {
+          color: var(--gray-700);
+          font-size: 14px;
+          line-height: 1.6;
+          margin: 0 0 20px;
+        }
+        .about-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 14px;
+          margin-bottom: 28px;
+        }
+        .about-card {
+          background: var(--gray-50, #f9fafb);
+          border: 1px solid var(--gray-100);
+          border-radius: 10px;
+          padding: 14px 16px;
+        }
+        .about-card h4 {
+          font-size: 14px;
+          color: var(--green-900);
+          margin: 0 0 6px;
+          font-weight: 600;
+        }
+        .about-card p {
+          font-size: 12.5px;
+          color: var(--gray-700);
+          margin: 0;
+          line-height: 1.45;
+        }
+        .about-author {
+          background: var(--green-50);
+          border: 1px solid var(--green-100);
+          border-radius: 12px;
+          padding: 20px;
+        }
+        .about-author h3 {
+          font-size: 16px;
+          color: var(--green-900);
+          margin: 0 0 8px;
+        }
+        .about-author p {
+          font-size: 13.5px;
+          color: var(--gray-700);
+          line-height: 1.55;
+          margin: 0 0 14px;
+        }
+        .author-links {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--green-800);
+        }
+        .author-links a {
+          color: var(--green-800);
+          text-decoration: none;
+        }
+        .author-links a:hover {
+          text-decoration: underline;
+        }
+
         .footer {
           text-align: center;
           padding: 20px;
