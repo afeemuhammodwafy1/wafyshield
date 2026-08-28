@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://wafyshield.vercel.app/sitemap.xml
+Sitemap: https://shield.amwafy.xyz/sitemap.xml

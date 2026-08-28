@@ -1,4 +1,23 @@
+import { useEffect, useState } from 'react';
+
 export default function App({ Component, pageProps }) {
+  const [theme, setTheme] = useState('light');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('wafyshield-theme') || 'light';
+    setTheme(saved);
+    document.documentElement.setAttribute('data-theme', saved);
+    setMounted(true);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('wafyshield-theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
+
   return (
     <>
       <style jsx global>{`
@@ -23,6 +42,30 @@ export default function App({ Component, pageProps }) {
           --amber-100: #fdf1da;
           --radius: 14px;
           --shadow: 0 1px 2px rgba(11, 61, 42, 0.06), 0 8px 24px rgba(11, 61, 42, 0.06);
+          --bg: #f2fbf6;
+          --card-bg: #ffffff;
+          --text: #14181a;
+          --text-secondary: #3f4a45;
+          --border: #eef4f0;
+        }
+
+        [data-theme="dark"] {
+          --green-50: #0d1f17;
+          --green-100: #1a3a2a;
+          --gray-100: #1a2a22;
+          --gray-300: #2a4034;
+          --gray-500: #8a9e94;
+          --gray-700: #b0c4b8;
+          --gray-900: #e8f0ec;
+          --white: #1a2e24;
+          --red-100: #3a1a15;
+          --amber-100: #3a2a10;
+          --bg: #0d1f17;
+          --card-bg: #1a2e24;
+          --text: #e8f0ec;
+          --text-secondary: #b0c4b8;
+          --border: #2a4034;
+          --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.4);
         }
 
         * {
@@ -33,11 +76,12 @@ export default function App({ Component, pageProps }) {
         body {
           padding: 0;
           margin: 0;
-          background: var(--green-50);
-          color: var(--gray-900);
+          background: var(--bg);
+          color: var(--text);
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
             sans-serif;
           -webkit-font-smoothing: antialiased;
+          transition: background 0.3s, color 0.3s;
         }
 
         a {
@@ -62,7 +106,7 @@ export default function App({ Component, pageProps }) {
           font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
         }
       `}</style>
-      <Component {...pageProps} />
+      <Component {...pageProps} theme={theme} toggleTheme={toggleTheme} mounted={mounted} />
     </>
-  )
+  );
 }

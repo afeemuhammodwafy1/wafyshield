@@ -1,5 +1,5 @@
-import Head from 'next/head'
-import Link from 'next/link'
+import Head from 'next/head';
+import Link from 'next/link';
 
 function ShieldWarningIcon() {
   return (
@@ -8,7 +8,7 @@ function ShieldWarningIcon() {
       <path d="M12 9v4.2" />
       <circle cx="12" cy="16" r="0.6" fill="var(--green-600)" stroke="none" />
     </svg>
-  )
+  );
 }
 
 export default function Custom404() {
@@ -39,11 +39,11 @@ export default function Custom404() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: var(--green-50);
+          background: var(--bg);
           padding: 24px;
         }
         .card {
-          background: var(--white);
+          background: var(--card-bg);
           border-radius: 16px;
           box-shadow: var(--shadow);
           padding: 44px 36px;
@@ -60,11 +60,11 @@ export default function Custom404() {
         h1 {
           font-size: 18px;
           margin: 0 0 10px;
-          color: var(--gray-900);
+          color: var(--text);
         }
         .msg {
           font-size: 14px;
-          color: var(--gray-700);
+          color: var(--text-secondary);
           line-height: 1.55;
           margin: 0 0 22px;
         }
@@ -83,5 +83,5 @@ export default function Custom404() {
         }
       `}</style>
     </>
-  )
+  );
 }

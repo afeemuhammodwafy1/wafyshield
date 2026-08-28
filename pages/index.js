@@ -1,11 +1,9 @@
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
 const HISTORY_KEY = 'wafyshield_scan_history'
 const HISTORY_LIMIT = 10
-const SITE_URL = 'https://wafyshield.vercel.app'
-
-/* ---------------------------- Inline SVG icons ---------------------------- */
+const SITE_URL = 'https://shield.amwafy.xyz'
 
 function ShieldIcon(props) {
   return (
@@ -134,7 +132,39 @@ function UserIcon(props) {
   )
 }
 
-/* ------------------------------- Helpers -------------------------------- */
+function DownloadIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.size || 18} height={props.size || 18} fill="none" stroke={props.color || 'currentColor'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  )
+}
+
+function MoonIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.size || 20} height={props.size || 20} fill="none" stroke={props.color || 'currentColor'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  )
+}
+
+function SunIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.size || 20} height={props.size || 20} fill="none" stroke={props.color || 'currentColor'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="5" />
+      <line x1="12" y1="1" x2="12" y2="3" />
+      <line x1="12" y1="21" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="3" y2="12" />
+      <line x1="21" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+  )
+}
 
 function statusColor(status) {
   if (status === 'PASS') return { fg: 'var(--green-600)', bg: 'var(--green-100)' }
@@ -176,7 +206,7 @@ function ScoreRing({ score }) {
         strokeDashoffset={offset}
         transform="rotate(-90 70 70)"
       />
-      <text x="70" y="66" textAnchor="middle" fontSize="30" fontWeight="700" fill="var(--gray-900)">
+      <text x="70" y="66" textAnchor="middle" fontSize="30" fontWeight="700" fill="var(--text)">
         {score}
       </text>
       <text x="70" y="86" textAnchor="middle" fontSize="11" fill="var(--gray-500)">
@@ -199,7 +229,6 @@ function saveHistory(list) {
   try {
     window.localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, HISTORY_LIMIT)))
   } catch {
-    /* localStorage unavailable, ignore */
   }
 }
 
@@ -211,9 +240,7 @@ function formatDate(iso) {
   }
 }
 
-/* --------------------------------- Page ---------------------------------- */
-
-export default function Home() {
+export default function Home({ theme, toggleTheme, mounted }) {
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -224,7 +251,7 @@ export default function Home() {
     setHistory(loadHistory())
   }, [])
 
-  async function runScan(e) {
+  const runScan = useCallback(async (e) => {
     if (e) e.preventDefault()
     setError('')
     if (!url.trim()) {
@@ -264,16 +291,38 @@ export default function Home() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [url, history])
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault()
+        runScan(e)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [runScan])
 
   function rescan(target) {
     setUrl(target)
-    setTimeout(() => runScan(), 0)
+    setTimeout(() => runScan(new Event('submit')), 100)
   }
 
   function clearHistory() {
     setHistory([])
     saveHistory([])
+  }
+
+  function downloadReport() {
+    if (!result) return
+    const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `wafyshield-report-${Date.now()}.json`
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   const pageTitle = 'WafyShield - Free Web Security Scanner & Website Security Checker'
@@ -341,7 +390,16 @@ export default function Home() {
             <ShieldIcon color="var(--green-600)" size={28} />
             <span className="brand-name">WafyShield</span>
           </div>
-          <p className="tagline">Web Security Scanner</p>
+          <div className="topbar-right">
+            <p className="tagline">Web Security Scanner</p>
+            <button 
+              onClick={toggleTheme} 
+              className="theme-toggle"
+              aria-label="Toggle dark mode"
+            >
+              {mounted && (theme === 'light' ? <MoonIcon size={20} color="var(--gray-700)" /> : <SunIcon size={20} color="var(--amber-600)" />)}
+            </button>
+          </div>
         </header>
 
         <main className="container">
@@ -363,10 +421,20 @@ export default function Home() {
                   onChange={(e) => setUrl(e.target.value)}
                   aria-label="Website URL to scan"
                 />
+                <span className="shortcut-hint">Ctrl+Enter</span>
               </div>
               <button type="submit" className="scan-btn" disabled={loading}>
-                <SearchIcon size={17} />
-                {loading ? 'Scanning...' : 'Scan Now'}
+                {loading ? (
+                  <>
+                    <span className="spinner"></span>
+                    Scanning...
+                  </>
+                ) : (
+                  <>
+                    <SearchIcon size={17} />
+                    Scan Now
+                  </>
+                )}
               </button>
             </form>
 
@@ -380,7 +448,13 @@ export default function Home() {
 
           {result && (
             <section className="results" aria-labelledby="results-heading">
-              <h2 id="results-heading">Security Assessment Results</h2>
+              <div className="results-header">
+                <h2 id="results-heading">Security Assessment Results</h2>
+                <button onClick={downloadReport} className="download-btn">
+                  <DownloadIcon size={16} />
+                  JSON Report
+                </button>
+              </div>
 
               <div className="summary-card">
                 <ScoreRing score={result.score} />
@@ -406,6 +480,18 @@ export default function Home() {
                   <p className="summary-note">Scanned {formatDate(result.scannedAt)}</p>
                 </div>
               </div>
+
+              {result.sslDetails && !result.sslDetails.error && (
+                <div className="ssl-details">
+                  <h4>SSL Certificate Details</h4>
+                  <div className="ssl-grid">
+                    <div><strong>Issuer:</strong> {result.sslDetails.issuer}</div>
+                    <div><strong>Valid From:</strong> {new Date(result.sslDetails.validFrom).toLocaleDateString()}</div>
+                    <div><strong>Valid Until:</strong> {new Date(result.sslDetails.validTo).toLocaleDateString()}</div>
+                    <div><strong>Subject:</strong> {result.sslDetails.subject}</div>
+                  </div>
+                </div>
+              )}
 
               <h3 className="checks-heading">Detailed Checks</h3>
               <ul className="checks-list">
@@ -487,7 +573,6 @@ export default function Home() {
             )}
           </section>
 
-          {/* ----------------- SEO Optimized About Section ----------------- */}
           <section className="about-section" aria-labelledby="about-heading">
             <div className="about-project">
               <div className="section-title-wrap">
@@ -528,7 +613,7 @@ export default function Home() {
                 <h3>Developed by Afee Muhammod Wafy</h3>
               </div>
               <p>
-                WafyShield was designed and developed by <strong>Afee Muhammod Wafy</strong> (also known as <strong>Wafy</strong>), a science student and web developer from Rangpur, Bangladesh[cite: 2]. Driven by curiosity and a focus on hands-on learning, he builds clean, functional web applications, full-stack tools (like <em>WafyURL</em>, <em>WafyDev</em>, and <em>AstroWafy</em>), and experiments in cybersecurity and AI[cite: 2].
+                WafyShield was designed and developed by <strong>Afee Muhammod Wafy</strong> (also known as <strong>Wafy</strong>), a science student and web developer from Rangpur, Bangladesh. Driven by curiosity and a focus on hands-on learning, he builds clean, functional web applications, full-stack tools (like <em>WafyURL</em>, <em>WafyDev</em>, and <em>AstroWafy</em>), and experiments in cybersecurity and AI.
               </p>
               <div className="author-links">
                 <a href="https://www.amwafy.xyz" target="_blank" rel="noopener noreferrer">
@@ -563,8 +648,8 @@ export default function Home() {
           align-items: center;
           justify-content: space-between;
           padding: 18px 24px;
-          background: var(--white);
-          border-bottom: 1px solid var(--gray-100);
+          background: var(--card-bg);
+          border-bottom: 1px solid var(--border);
         }
         .brand {
           display: flex;
@@ -577,10 +662,32 @@ export default function Home() {
           color: var(--green-800);
           letter-spacing: -0.02em;
         }
+        .topbar-right {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
         .tagline {
           margin: 0;
           font-size: 13px;
           color: var(--gray-500);
+        }
+        .theme-toggle {
+          background: var(--gray-100);
+          border: none;
+          border-radius: 50%;
+          width: 38px;
+          height: 38px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: 0.2s;
+          color: var(--text);
+        }
+        .theme-toggle:hover {
+          transform: scale(1.05);
+          background: var(--gray-300);
         }
         .container {
           max-width: 880px;
@@ -600,7 +707,7 @@ export default function Home() {
           letter-spacing: -0.02em;
         }
         .hero-sub {
-          color: var(--gray-700);
+          color: var(--text-secondary);
           max-width: 620px;
           margin: 0 auto 26px;
           line-height: 1.55;
@@ -608,7 +715,7 @@ export default function Home() {
         .scan-form {
           display: flex;
           gap: 10px;
-          max-width: 560px;
+          max-width: 620px;
           margin: 0 auto;
         }
         .input-wrap {
@@ -616,10 +723,11 @@ export default function Home() {
           display: flex;
           align-items: center;
           gap: 8px;
-          background: var(--white);
-          border: 1px solid var(--gray-300);
+          background: var(--card-bg);
+          border: 1px solid var(--border);
           border-radius: 10px;
           padding: 0 14px;
+          position: relative;
         }
         .input-wrap input {
           border: none;
@@ -628,6 +736,19 @@ export default function Home() {
           padding: 13px 0;
           font-size: 15px;
           background: transparent;
+          color: var(--text);
+        }
+        .input-wrap input::placeholder {
+          color: var(--gray-500);
+        }
+        .shortcut-hint {
+          font-size: 10px;
+          color: var(--gray-500);
+          background: var(--gray-100);
+          padding: 2px 8px;
+          border-radius: 4px;
+          font-weight: 600;
+          letter-spacing: 0.02em;
         }
         .scan-btn {
           display: flex;
@@ -640,6 +761,8 @@ export default function Home() {
           border-radius: 10px;
           font-size: 15px;
           font-weight: 600;
+          min-width: 130px;
+          justify-content: center;
         }
         .scan-btn:hover {
           background: var(--green-700);
@@ -647,6 +770,17 @@ export default function Home() {
         .scan-btn:disabled {
           opacity: 0.7;
           cursor: default;
+        }
+        .spinner {
+          width: 18px;
+          height: 18px;
+          border: 2px solid rgba(255,255,255,0.3);
+          border-top-color: var(--white);
+          border-radius: 50%;
+          animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
         .error-box {
           display: flex;
@@ -661,16 +795,37 @@ export default function Home() {
           font-size: 14px;
         }
         .results {
-          background: var(--white);
+          background: var(--card-bg);
           border-radius: var(--radius);
           box-shadow: var(--shadow);
           padding: 28px;
           margin-bottom: 40px;
         }
-        .results h2 {
-          margin-top: 0;
+        .results-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 16px;
+        }
+        .results-header h2 {
+          margin: 0;
           font-size: 20px;
           color: var(--green-900);
+        }
+        .download-btn {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: var(--green-100);
+          color: var(--green-700);
+          border: none;
+          padding: 8px 14px;
+          border-radius: 8px;
+          font-size: 13px;
+          font-weight: 600;
+        }
+        .download-btn:hover {
+          background: var(--green-200);
         }
         .summary-card {
           display: flex;
@@ -678,7 +833,7 @@ export default function Home() {
           gap: 28px;
           flex-wrap: wrap;
           padding-bottom: 20px;
-          border-bottom: 1px solid var(--gray-100);
+          border-bottom: 1px solid var(--border);
           margin-bottom: 20px;
         }
         .summary-meta {
@@ -690,7 +845,7 @@ export default function Home() {
           align-items: center;
           gap: 8px;
           font-size: 14px;
-          color: var(--gray-700);
+          color: var(--text-secondary);
           word-break: break-all;
           margin-bottom: 10px;
         }
@@ -716,6 +871,28 @@ export default function Home() {
           font-size: 12px;
           color: var(--gray-500);
         }
+        .ssl-details {
+          background: var(--green-50);
+          border: 1px solid var(--green-100);
+          border-radius: 10px;
+          padding: 16px;
+          margin-bottom: 20px;
+        }
+        .ssl-details h4 {
+          margin: 0 0 10px;
+          color: var(--green-800);
+          font-size: 14px;
+        }
+        .ssl-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px 20px;
+          font-size: 13px;
+          color: var(--text-secondary);
+        }
+        .ssl-grid strong {
+          color: var(--text);
+        }
         .checks-heading {
           font-size: 15px;
           text-transform: uppercase;
@@ -732,7 +909,7 @@ export default function Home() {
           gap: 12px;
         }
         .check-item {
-          border: 1px solid var(--gray-100);
+          border: 1px solid var(--border);
           border-radius: 10px;
           padding: 14px 16px;
         }
@@ -755,7 +932,7 @@ export default function Home() {
         .check-desc {
           margin: 8px 0 0 30px;
           font-size: 13.5px;
-          color: var(--gray-700);
+          color: var(--text-secondary);
         }
         .check-fix {
           margin: 6px 0 0 30px;
@@ -779,7 +956,7 @@ export default function Home() {
           gap: 16px;
         }
         .feature {
-          background: var(--white);
+          background: var(--card-bg);
           border-radius: var(--radius);
           box-shadow: var(--shadow);
           padding: 20px;
@@ -791,12 +968,12 @@ export default function Home() {
         }
         .feature p {
           font-size: 13.5px;
-          color: var(--gray-700);
+          color: var(--text-secondary);
           margin: 0;
           line-height: 1.5;
         }
         .history {
-          background: var(--white);
+          background: var(--card-bg);
           border-radius: var(--radius);
           box-shadow: var(--shadow);
           padding: 24px;
@@ -820,8 +997,8 @@ export default function Home() {
           align-items: center;
           gap: 6px;
           background: none;
-          border: 1px solid var(--gray-300);
-          color: var(--gray-700);
+          border: 1px solid var(--border);
+          color: var(--text-secondary);
           font-size: 12.5px;
           padding: 6px 10px;
           border-radius: 8px;
@@ -849,7 +1026,7 @@ export default function Home() {
           gap: 10px;
           flex-wrap: wrap;
           padding: 10px 12px;
-          border: 1px solid var(--gray-100);
+          border: 1px solid var(--border);
           border-radius: 8px;
           font-size: 13px;
         }
@@ -874,16 +1051,14 @@ export default function Home() {
         }
         .history-score {
           font-weight: 700;
-          color: var(--gray-900);
+          color: var(--text);
         }
         .history-date {
           color: var(--gray-500);
           font-size: 12px;
         }
-
-        /* ---------------- About Section Styles ---------------- */
         .about-section {
-          background: var(--white);
+          background: var(--card-bg);
           border-radius: var(--radius);
           box-shadow: var(--shadow);
           padding: 32px 28px;
@@ -901,7 +1076,7 @@ export default function Home() {
           margin: 0;
         }
         .about-project > p {
-          color: var(--gray-700);
+          color: var(--text-secondary);
           font-size: 14px;
           line-height: 1.6;
           margin: 0 0 20px;
@@ -913,8 +1088,8 @@ export default function Home() {
           margin-bottom: 28px;
         }
         .about-card {
-          background: var(--gray-50, #f9fafb);
-          border: 1px solid var(--gray-100);
+          background: var(--bg);
+          border: 1px solid var(--border);
           border-radius: 10px;
           padding: 16px;
         }
@@ -932,7 +1107,7 @@ export default function Home() {
         }
         .about-card p {
           font-size: 12.5px;
-          color: var(--gray-700);
+          color: var(--text-secondary);
           margin: 0;
           line-height: 1.45;
         }
@@ -949,7 +1124,7 @@ export default function Home() {
         }
         .about-author p {
           font-size: 13.5px;
-          color: var(--gray-700);
+          color: var(--text-secondary);
           line-height: 1.55;
           margin: 0 0 14px;
         }
@@ -972,7 +1147,6 @@ export default function Home() {
         .author-links a:hover {
           text-decoration: underline;
         }
-
         .footer {
           text-align: center;
           padding: 20px;
@@ -985,6 +1159,24 @@ export default function Home() {
           }
           .hero h1 {
             font-size: 24px;
+          }
+          .topbar {
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+          .topbar-right {
+            gap: 10px;
+          }
+          .shortcut-hint {
+            display: none;
+          }
+          .ssl-grid {
+            grid-template-columns: 1fr;
+          }
+          .results-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
           }
         }
       `}</style>
