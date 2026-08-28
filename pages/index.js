@@ -100,6 +100,40 @@ function SearchIcon(props) {
   )
 }
 
+function GitHubIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.size || 16} height={props.size || 16} fill="currentColor">
+      <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.57.1.78-.25.78-.55v-1.94c-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.4-5.25 5.68.42.36.78 1.08.78 2.18v3.23c0 .3.21.66.79.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z" />
+    </svg>
+  )
+}
+
+function LinkedInIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.size || 16} height={props.size || 16} fill="currentColor">
+      <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45z" />
+    </svg>
+  )
+}
+
+function CodeIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.size || 20} height={props.size || 20} fill="none" stroke={props.color || 'currentColor'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
+    </svg>
+  )
+}
+
+function UserIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" width={props.size || 20} height={props.size || 20} fill="none" stroke={props.color || 'currentColor'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  )
+}
+
 /* ------------------------------- Helpers -------------------------------- */
 
 function statusColor(status) {
@@ -244,7 +278,7 @@ export default function Home() {
 
   const pageTitle = 'WafyShield - Free Web Security Scanner & Website Security Checker'
   const pageDescription =
-    'WafyShield is a free web security scanner that checks HTTPS/SSL, security headers, and cookie security in seconds. Get an instant security score, risk level, and clear fix recommendations.'
+    'WafyShield is a free web security scanner developed by Afee Muhammod Wafy that checks HTTPS/SSL, security headers, and cookie security in seconds. Get an instant security score, risk level, and clear fix recommendations.'
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -260,8 +294,17 @@ export default function Home() {
     },
     "creator": {
       "@type": "Person",
+      "@id": "https://www.amwafy.xyz/#person",
       "name": "Afee Muhammod Wafy",
-      "url": "https://www.amwafy.xyz"
+      "alternateName": ["Wafy", "Muhammod Wafy", "আফী মুহাম্মদ ওয়াফী"],
+      "jobTitle": "Web Developer & Science Student",
+      "nationality": { "@type": "Country", "name": "Bangladesh" },
+      "url": "https://www.amwafy.xyz/",
+      "sameAs": [
+        "https://github.com/afeemuhammodwafy1",
+        "https://bd.linkedin.com/in/afeemuhammodwafy1",
+        "https://twitter.com/muhammodwafy"
+      ]
     },
     "description": pageDescription
   }
@@ -273,7 +316,7 @@ export default function Home() {
         <meta name="description" content={pageDescription} />
         <meta
           name="keywords"
-          content="web security scanner, website security checker, security headers checker, HTTPS security checker, website security assessment, SSL checker, cookie security scanner, Afee Muhammod Wafy"
+          content="web security scanner, website security checker, security headers checker, HTTPS security checker, website security assessment, SSL checker, cookie security scanner, Afee Muhammod Wafy, WafyShield"
         />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={SITE_URL + '/'} />
@@ -447,42 +490,57 @@ export default function Home() {
           {/* ----------------- SEO Optimized About Section ----------------- */}
           <section className="about-section" aria-labelledby="about-heading">
             <div className="about-project">
-              <h2 id="about-heading">🛡️ About WafyShield</h2>
+              <div className="section-title-wrap">
+                <ShieldIcon color="var(--green-600)" size={20} />
+                <h2 id="about-heading">About WafyShield</h2>
+              </div>
               <p>
                 <strong>WafyShield</strong> is an open-access, lightweight web security assessment platform engineered to help developers, sysadmins, and website owners quickly evaluate their web security posture. By performing instant non-intrusive scans on public HTTP response headers, WafyShield verifies whether vital defense mechanisms—such as HTTPS enforcement, SSL/TLS certificate health, OWASP security headers, and cookie flags—are properly deployed.
               </p>
               <div className="about-grid">
                 <div className="about-card">
-                  <h4>Header Analysis</h4>
+                  <div className="card-head">
+                    <CodeIcon color="var(--green-600)" size={18} />
+                    <h4>Header Analysis</h4>
+                  </div>
                   <p>Audits HSTS, CSP, X-Frame-Options, X-Content-Type-Options, and Referrer-Policy against OWASP guidelines.</p>
                 </div>
                 <div className="about-card">
-                  <h4>SSL &amp; Cookie Audit</h4>
+                  <div className="card-head">
+                    <LockIcon color="var(--green-600)" size={18} />
+                    <h4>SSL &amp; Cookie Audit</h4>
+                  </div>
                   <p>Checks HTTPS redirection and verifies Secure, HttpOnly, and SameSite attributes on cookies.</p>
                 </div>
                 <div className="about-card">
-                  <h4>Remediation Guide</h4>
+                  <div className="card-head">
+                    <CheckCircleIcon color="var(--green-600)" size={18} />
+                    <h4>Remediation Guide</h4>
+                  </div>
                   <p>Provides a transparent security score (0-100) alongside actionable, copy-paste developer fix suggestions.</p>
                 </div>
               </div>
             </div>
 
             <div className="about-author">
-              <h3>👨‍💻 Developed by Afee Muhammod Wafy</h3>
+              <div className="section-title-wrap">
+                <UserIcon color="var(--green-600)" size={20} />
+                <h3>Developed by Afee Muhammod Wafy</h3>
+              </div>
               <p>
-                WafyShield was built by <strong>Afee Muhammod Wafy</strong>, a web developer passionate about cybersecurity fundamentals, network security, and robust web architecture. Designed to make web security diagnostics fast and accessible, this project reflects a continuous effort to promote secure coding practices across the web.
+                WafyShield was designed and developed by <strong>Afee Muhammod Wafy</strong> (also known as <strong>Wafy</strong>), a science student and web developer from Rangpur, Bangladesh[cite: 2]. Driven by curiosity and a focus on hands-on learning, he builds clean, functional web applications, full-stack tools (like <em>WafyURL</em>, <em>WafyDev</em>, and <em>AstroWafy</em>), and experiments in cybersecurity and AI[cite: 2].
               </p>
               <div className="author-links">
                 <a href="https://www.amwafy.xyz" target="_blank" rel="noopener noreferrer">
-                  🌐 Portfolio
+                  <GlobeIcon size={15} color="var(--green-800)" /> Portfolio
                 </a>
                 <span>•</span>
-                <a href="https://github.com/amwafy" target="_blank" rel="noopener noreferrer">
-                  🐙 GitHub
+                <a href="https://github.com/afeemuhammodwafy1" target="_blank" rel="noopener noreferrer">
+                  <GitHubIcon size={15} /> GitHub
                 </a>
                 <span>•</span>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
-                  💼 LinkedIn
+                <a href="https://bd.linkedin.com/in/afeemuhammodwafy1" target="_blank" rel="noopener noreferrer">
+                  <LinkedInIcon size={15} /> LinkedIn
                 </a>
               </div>
             </div>
@@ -831,10 +889,16 @@ export default function Home() {
           padding: 32px 28px;
           margin-bottom: 40px;
         }
+        .section-title-wrap {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+        }
         .about-project h2 {
           font-size: 20px;
           color: var(--green-900);
-          margin: 0 0 12px;
+          margin: 0;
         }
         .about-project > p {
           color: var(--gray-700);
@@ -852,12 +916,18 @@ export default function Home() {
           background: var(--gray-50, #f9fafb);
           border: 1px solid var(--gray-100);
           border-radius: 10px;
-          padding: 14px 16px;
+          padding: 16px;
+        }
+        .card-head {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
         }
         .about-card h4 {
           font-size: 14px;
           color: var(--green-900);
-          margin: 0 0 6px;
+          margin: 0;
           font-weight: 600;
         }
         .about-card p {
@@ -870,12 +940,12 @@ export default function Home() {
           background: var(--green-50);
           border: 1px solid var(--green-100);
           border-radius: 12px;
-          padding: 20px;
+          padding: 22px;
         }
         .about-author h3 {
           font-size: 16px;
           color: var(--green-900);
-          margin: 0 0 8px;
+          margin: 0;
         }
         .about-author p {
           font-size: 13.5px;
@@ -886,13 +956,16 @@ export default function Home() {
         .author-links {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
           flex-wrap: wrap;
           font-size: 13px;
           font-weight: 600;
           color: var(--green-800);
         }
         .author-links a {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
           color: var(--green-800);
           text-decoration: none;
         }
