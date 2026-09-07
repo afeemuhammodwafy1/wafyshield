@@ -343,12 +343,12 @@ export default function Home({ theme, toggleTheme, mounted }) {
     },
     "creator": {
       "@type": "Person",
-      "@id": "https://www.amwafy.xyz/#person",
+      "@id": "https://afeemuhammodwafy.com/#person",
       "name": "Afee Muhammod Wafy",
       "alternateName": ["Wafy", "Muhammod Wafy", "আফী মুহাম্মদ ওয়াফী"],
       "jobTitle": "Web Developer & Science Student",
       "nationality": { "@type": "Country", "name": "Bangladesh" },
-      "url": "https://www.amwafy.xyz/",
+      "url": "https://afeemuhammodwafy.com/",
       "sameAs": [
         "https://github.com/afeemuhammodwafy1",
         "https://bd.linkedin.com/in/afeemuhammodwafy1",
@@ -616,7 +616,7 @@ export default function Home({ theme, toggleTheme, mounted }) {
                 WafyShield was designed and developed by <strong>Afee Muhammod Wafy</strong> (also known as <strong>Wafy</strong>), a science student and web developer from Rangpur, Bangladesh. Driven by curiosity and a focus on hands-on learning, he builds clean, functional web applications, full-stack tools (like <em>WafyURL</em>, <em>WafyDev</em>, and <em>AstroWafy</em>), and experiments in cybersecurity and AI.
               </p>
               <div className="author-links">
-                <a href="https://www.amwafy.xyz" target="_blank" rel="noopener noreferrer">
+                <a href="https://afeemuhammodwafy.com" target="_blank" rel="noopener noreferrer">
                   <GlobeIcon size={15} color="var(--green-800)" /> Portfolio
                 </a>
                 <span>•</span>
