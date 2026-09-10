@@ -192,7 +192,7 @@ function ScoreRing({ score }) {
   const offset = circumference - (Math.max(0, Math.min(100, score)) / 100) * circumference
   const color = score >= 90 ? 'var(--green-500)' : score >= 70 ? '#d9a441' : score >= 50 ? '#c25a2b' : 'var(--red-600)'
   return (
-    <svg width="140" height="140" viewBox="0 0 140 140">
+    <svg className="score-ring" width="140" height="140" viewBox="0 0 140 140">
       <circle cx="70" cy="70" r={radius} fill="none" stroke="var(--gray-100)" strokeWidth="12" />
       <circle
         cx="70"
@@ -345,7 +345,7 @@ export default function Home({ theme, toggleTheme, mounted }) {
       "@type": "Person",
       "@id": "https://afeemuhammodwafy.com/#person",
       "name": "Afee Muhammod Wafy",
-      "alternateName": ["Wafy", "Muhammod Wafy", "আফী মুহাম্মদ ওয়াফী"],
+      "alternateName": ["Wafy", "Muhammod Wafy", "আফী মুহাম্মদ ওয়াফী"],
       "jobTitle": "Web Developer & Science Student",
       "nationality": { "@type": "Country", "name": "Bangladesh" },
       "url": "https://afeemuhammodwafy.com/",
@@ -728,6 +728,7 @@ export default function Home({ theme, toggleTheme, mounted }) {
           border-radius: 10px;
           padding: 0 14px;
           position: relative;
+          min-width: 0;
         }
         .input-wrap input {
           border: none;
@@ -737,6 +738,8 @@ export default function Home({ theme, toggleTheme, mounted }) {
           font-size: 15px;
           background: transparent;
           color: var(--text);
+          min-width: 0;
+          width: 100%;
         }
         .input-wrap input::placeholder {
           color: var(--gray-500);
@@ -763,6 +766,8 @@ export default function Home({ theme, toggleTheme, mounted }) {
           font-weight: 600;
           min-width: 130px;
           justify-content: center;
+          min-height: 48px;
+          white-space: nowrap;
         }
         .scan-btn:hover {
           background: var(--green-700);
@@ -806,6 +811,8 @@ export default function Home({ theme, toggleTheme, mounted }) {
           align-items: center;
           justify-content: space-between;
           margin-bottom: 16px;
+          gap: 10px;
+          flex-wrap: wrap;
         }
         .results-header h2 {
           margin: 0;
@@ -823,6 +830,7 @@ export default function Home({ theme, toggleTheme, mounted }) {
           border-radius: 8px;
           font-size: 13px;
           font-weight: 600;
+          white-space: nowrap;
         }
         .download-btn:hover {
           background: var(--green-200);
@@ -917,11 +925,13 @@ export default function Home({ theme, toggleTheme, mounted }) {
           display: flex;
           align-items: center;
           gap: 10px;
+          flex-wrap: wrap;
         }
         .check-title {
           font-weight: 600;
           flex: 1;
           font-size: 14.5px;
+          min-width: 140px;
         }
         .check-status {
           font-size: 11px;
@@ -983,6 +993,8 @@ export default function Home({ theme, toggleTheme, mounted }) {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 10px;
+          flex-wrap: wrap;
         }
         .history-head h2 {
           font-size: 16px;
@@ -1002,6 +1014,7 @@ export default function Home({ theme, toggleTheme, mounted }) {
           font-size: 12.5px;
           padding: 6px 10px;
           border-radius: 8px;
+          white-space: nowrap;
         }
         .clear-btn:hover {
           border-color: var(--red-600);
@@ -1153,30 +1166,208 @@ export default function Home({ theme, toggleTheme, mounted }) {
           font-size: 12.5px;
           color: var(--gray-500);
         }
-        @media (max-width: 520px) {
-          .scan-form {
-            flex-direction: column;
+        @media (max-width: 768px) {
+          .container {
+            padding: 32px 18px 50px;
           }
           .hero h1 {
-            font-size: 24px;
+            font-size: 26px;
           }
+          .results {
+            padding: 22px;
+          }
+          .about-section {
+            padding: 26px 20px;
+          }
+          .score-ring {
+            width: 120px;
+            height: 120px;
+          }
+        }
+        @media (max-width: 520px) {
           .topbar {
-            flex-wrap: wrap;
-            gap: 8px;
+            padding: 14px 16px;
           }
-          .topbar-right {
-            gap: 10px;
+          .brand-name {
+            font-size: 18px;
+          }
+          .tagline {
+            display: none;
+          }
+          .theme-toggle {
+            width: 34px;
+            height: 34px;
+          }
+          .container {
+            padding: 26px 14px 44px;
+          }
+          .hero {
+            margin-bottom: 26px;
+          }
+          .hero h1 {
+            font-size: 22px;
+          }
+          .hero-sub {
+            font-size: 14px;
+            margin-bottom: 20px;
+          }
+          .scan-form {
+            flex-direction: column;
+            gap: 12px;
+          }
+          .input-wrap {
+            width: 100%;
+          }
+          .input-wrap input {
+            font-size: 16px;
+            padding: 14px 0;
           }
           .shortcut-hint {
             display: none;
           }
-          .ssl-grid {
-            grid-template-columns: 1fr;
+          .scan-btn {
+            width: 100%;
+            min-width: 0;
+            min-height: 50px;
+            padding: 0 18px;
+            font-size: 15px;
+          }
+          .error-box {
+            font-size: 13px;
+            padding: 9px 12px;
+          }
+          .results {
+            padding: 18px 14px;
+            margin-bottom: 28px;
           }
           .results-header {
             flex-direction: column;
             align-items: stretch;
             gap: 10px;
+          }
+          .results-header h2 {
+            font-size: 17px;
+          }
+          .download-btn {
+            justify-content: center;
+            width: 100%;
+            padding: 10px 14px;
+          }
+          .summary-card {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+          }
+          .summary-meta {
+            min-width: 0;
+            width: 100%;
+          }
+          .summary-url {
+            justify-content: center;
+            font-size: 13px;
+          }
+          .badges {
+            justify-content: center;
+          }
+          .summary-note {
+            text-align: center;
+          }
+          .ssl-grid {
+            grid-template-columns: 1fr;
+            gap: 6px;
+          }
+          .checks-heading {
+            font-size: 13px;
+          }
+          .check-item {
+            padding: 12px 12px;
+          }
+          .check-top {
+            gap: 8px;
+          }
+          .check-title {
+            font-size: 13.5px;
+            min-width: 0;
+            flex-basis: calc(100% - 30px);
+          }
+          .check-status {
+            margin-left: auto;
+          }
+          .check-desc,
+          .check-fix {
+            margin-left: 0;
+            font-size: 13px;
+          }
+          .features h2 {
+            font-size: 18px;
+          }
+          .feature-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+          .feature {
+            padding: 16px;
+          }
+          .history {
+            padding: 18px 14px;
+            margin-bottom: 28px;
+          }
+          .history-head h2 {
+            font-size: 15px;
+          }
+          .history-item {
+            padding: 10px;
+            gap: 8px;
+          }
+          .history-link {
+            min-width: 100%;
+            flex-basis: 100%;
+            font-size: 13px;
+          }
+          .history-score {
+            font-size: 13px;
+          }
+          .history-date {
+            font-size: 11px;
+            margin-left: auto;
+          }
+          .about-section {
+            padding: 20px 16px;
+            margin-bottom: 28px;
+          }
+          .about-project h2 {
+            font-size: 18px;
+          }
+          .about-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+          .about-author {
+            padding: 18px;
+          }
+          .author-links {
+            gap: 10px;
+            font-size: 12.5px;
+          }
+          .footer {
+            padding: 16px 14px;
+            font-size: 12px;
+          }
+        }
+        @media (max-width: 380px) {
+          .hero h1 {
+            font-size: 20px;
+          }
+          .brand-name {
+            font-size: 17px;
+          }
+          .scan-btn {
+            font-size: 14px;
+          }
+          .score-ring {
+            width: 104px;
+            height: 104px;
           }
         }
       `}</style>
