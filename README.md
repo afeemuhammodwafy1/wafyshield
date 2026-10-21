@@ -4,7 +4,7 @@
 
 WafyShield checks a publicly accessible website and reports a security score, risk level, `PASS` / `WARNING` / `FAIL` results, and practical recommendations for improving its security. Scan history is stored in your browser using `localStorage`.
 
-**Live website:** https://wafyshield.vercel.app
+**Live website:** https://shield.amwafy.xyz/
 
 ## Preview
 
