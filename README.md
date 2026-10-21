@@ -96,3 +96,9 @@ WafyShield is licensed under the [MIT License](https://github.com/afeemuhammodwa
 
 You may use, copy, modify, distribute, and include this software in commercial projects, subject to the terms of the MIT License.
 
+## About
+
+**WafyShield** is a product of **Wafyro Software**.
+
+**Founder and Software Developer:** Afee Muhammod Wafy  
+
